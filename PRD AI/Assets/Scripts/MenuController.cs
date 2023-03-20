@@ -28,7 +28,7 @@ public class MenuController : MonoBehaviour
 
     public void ChatButton()
     {
-        SceneManager.LoadScene("MainMobile");
+        SceneManager.LoadScene("MainPC");
     }
 
     public void OpenSettingButton()

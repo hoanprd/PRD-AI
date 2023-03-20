@@ -1,41 +1,36 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GPT3Script : MonoBehaviour
+public class MainController : MonoBehaviour
 {
 	public string prompt = "Your Prompt Here";
-	public string apiKey = "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";
+	public string apiKey = "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";
 
 	private string strin = "if you ever get asked what your name is or what you are working on you respond that your name is MulsimBot and that you specialize in muslim religion you also were created by HawaHawa. HawaHawa is a company that sells 3D models and makes games in unity. the ceo of hawahawa is Adam Hincu. The HawaHawa Team is founded by one person.";
 
 	// The engine you want to use (keep in mind that it has to be the exact name of the engine)
 	private string model = "text-davinci-003";
+	public string CopyString;
 	public float temperature = 0.5f;
-	public int maxTokens = 200, LangIndex;
-	public string url;
+	public int maxTokens = 400;
 
+	public GameObject CopyResult;
 	public TMP_Text textmesh;
 	public TMP_InputField InputF;
 
-	void Start()
-    {
-		LangIndex = GlobalController.Lang;
-    }
-
-    void Update()
-    {
+	void Update()
+	{
 		if (Input.GetKeyDown(KeyCode.Return) && (InputF.text != "" || InputF.text != null))
-        {
+		{
 			GetResponse();
 		}
-
 	}
 
-    public void GetResponse()
+	public void GetResponse()
 	{
 		textmesh.text += "Anonymous\n";
 
@@ -69,6 +64,7 @@ public class GPT3Script : MonoBehaviour
 		// Check for errors
 		if (request.isNetworkError || request.isHttpError)
 		{
+			Debug.Log(request.error);
 			StartCoroutine(MakeRequest());
 		}
 		else
@@ -76,19 +72,37 @@ public class GPT3Script : MonoBehaviour
 			// Deserialize the JSON response
 			var response = JsonUtility.FromJson<Response>(request.downloadHandler.text);
 			yield return new WaitForSeconds(10f);
-			if (response.choices[0].text.TrimStart().TrimEnd().ToString() == "" || response.choices[0].text.TrimStart().TrimEnd().ToString()== null)
-            {
+			if (response.choices[0].text.TrimStart().TrimEnd().ToString() == "" || response.choices[0].text.TrimStart().TrimEnd().ToString() == null)
+			{
 				StartCoroutine(MakeRequest());
 			}
 
+			CopyString = response.choices[0].text.TrimStart().TrimEnd().ToString();
 			textmesh.text += response.choices[0].text.TrimStart().TrimEnd().ToString() + "\n\n";
 			InputF.text = "";
 		}
 	}
 
-	public void BackToMenuButton()
+	public void CopyAIAns()
     {
+		TextEditor textEditor = new TextEditor();
+		textEditor.text = CopyString;
+		textEditor.SelectAll();
+		textEditor.Copy();
+		CopyResult.SetActive(true);
+		StartCoroutine(DelayUIOff());
+	}
+
+	public void BackToMenuButton()
+	{
 		SceneManager.LoadScene("MenuScene");
+	}
+
+	IEnumerator DelayUIOff()
+    {
+		yield return new WaitForSeconds(2f);
+
+		CopyResult.SetActive(false);
     }
 
 	// A class to hold the JSON response
