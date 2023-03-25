@@ -9,6 +9,7 @@ public class MainController : MonoBehaviour
 {
 	public string prompt = "Your Prompt Here";
 	public string apiKey = "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";
+	//public string apiKey = "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";
 
 	private string strin = "if you ever get asked what your name is or what you are working on you respond that your name is MulsimBot and that you specialize in muslim religion you also were created by HawaHawa. HawaHawa is a company that sells 3D models and makes games in unity. the ceo of hawahawa is Adam Hincu. The HawaHawa Team is founded by one person.";
 
@@ -84,7 +85,7 @@ public class MainController : MonoBehaviour
 	}
 
 	public void CopyAIAns()
-    {
+	{
 		TextEditor textEditor = new TextEditor();
 		textEditor.text = CopyString;
 		textEditor.SelectAll();
@@ -99,11 +100,11 @@ public class MainController : MonoBehaviour
 	}
 
 	IEnumerator DelayUIOff()
-    {
+	{
 		yield return new WaitForSeconds(2f);
 
 		CopyResult.SetActive(false);
-    }
+	}
 
 	// A class to hold the JSON response
 	[System.Serializable]
